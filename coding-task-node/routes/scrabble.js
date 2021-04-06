@@ -52,7 +52,7 @@ router.get("/description/:word", (req, res) => {
       return res.send(e.data[0].meanings[0].definitions[0].definition);
     })
     .catch((e) => {
-      return "No Definitions Found";
+      return res.send({ title: "No Definitions Found" });
     });
 });
 

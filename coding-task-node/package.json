@@ -1,0 +1,20 @@
+{
+  "name": "coding-task-node",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "config": "^3.3.6",
+    "express": "^4.17.1",
+    "helmet": "^4.4.1",
+    "joi": "^17.4.0",
+    "morgan": "^1.10.0",
+    "underscore": "^1.12.1",
+    "uuid": "^8.3.2"
+  }
+}
+

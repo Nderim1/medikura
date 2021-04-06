@@ -18,6 +18,9 @@ You will also see any lint errors in the console.
 
 ## Screenshots
 
+Gif\
+![Gif](https://github.com/sabisin/medikura/raw/main/coding-task-frontend/screenshots/Screen%20Recording%202021-04-06%20at%204.57.52%20PM.gif)
+
 All words\
 ![All words](https://github.com/sabisin/medikura/raw/main/coding-task-frontend/screenshots/screencapture-localhost-3002-words-2021-04-06-15_03_58.png)
 

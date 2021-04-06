@@ -12,7 +12,7 @@ class Words extends Component {
     currentPage: 1,
     pageSize: 10,
     searchQuery: "",
-    sortColumn: { path: "title", order: "asc" },
+    sortColumn: { path: "score", order: "desc" },
   };
 
   componentDidMount() {

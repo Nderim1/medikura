@@ -1,24 +1,26 @@
+import { v4 as uuidv4 } from "uuid";
+
 export const words = [
-  { _id: "1", title: "aa" },
-  { _id: "2", title: "aah" },
-  { _id: "3", title: "aahed" },
-  { _id: "4", title: "aahing" },
-  { _id: "5", title: "aahs" },
-  { _id: "6", title: "aal" },
-  { _id: "7", title: "aalii" },
-  { _id: "8", title: "aaliis" },
-  { _id: "9", title: "aals" },
-  { _id: "10", title: "aardvark" },
-  { _id: "11", title: "aardvarks" },
-  { _id: "12", title: "aardwolf" },
-  { _id: "13", title: "aardwolves" },
-  { _id: "14", title: "aargh" },
-  { _id: "15", title: "aarrgh" },
-  { _id: "16", title: "aarrghh" },
-  { _id: "17", title: "aas" },
-  { _id: "18", title: "aasvogel" },
-  { _id: "19", title: "aasvogels" },
-  { _id: "20", title: "ab" },
+  { _id: uuidv4(), title: "aa" },
+  { _id: uuidv4(), title: "aah" },
+  { _id: uuidv4(), title: "aahed" },
+  { _id: uuidv4(), title: "aahing" },
+  { _id: uuidv4(), title: "aahs" },
+  { _id: uuidv4(), title: "aal" },
+  { _id: uuidv4(), title: "aalii" },
+  { _id: uuidv4(), title: "aaliis" },
+  { _id: uuidv4(), title: "aals" },
+  { _id: uuidv4(), title: "aardvark" },
+  { _id: uuidv4(), title: "aardvarks" },
+  { _id: uuidv4(), title: "aardwolf" },
+  { _id: uuidv4(), title: "aardwolves" },
+  { _id: uuidv4(), title: "aargh" },
+  { _id: uuidv4(), title: "aarrgh" },
+  { _id: uuidv4(), title: "aarrghh" },
+  { _id: uuidv4(), title: "aas" },
+  { _id: uuidv4(), title: "aasvogel" },
+  { _id: uuidv4(), title: "aasvogels" },
+  { _id: uuidv4(), title: "ab" },
 ];
 
 const scores = [
@@ -55,21 +57,31 @@ export function getWords() {
 }
 
 export function getFilteredWords(searchQuery) {
-  var searchLetters = searchQuery.split("");
+  var letters = searchQuery.split("");
   var validWords = [];
 
   for (var i = 0; i < words.length; i++) {
-    var temp = words[i].title.split("");
+    var word = words[i];
+    var temp = word.title.split("");
 
-    for (var j = 0; j < searchLetters.length; j++) {
-      temp = temp.filter((e) => e !== searchLetters[j]);
+    for (var j = 0; j < letters.length; j++) {
+      var letter = letters[j];
+      temp = temp.filter((e) => e !== letter);
 
       if (temp.length === 0) {
-        validWords.push(words[i]);
+        var wordObj = { ...word, score: 0 };
+
+        for (var k = 0; k < word.title.split("").length; k++) {
+          wordObj.score += scores.filter(
+            (score) =>
+              score.letter.toLocaleLowerCase() === word.title.split("")[k]
+          )[0].count;
+        }
+
+        validWords.push(wordObj);
         break;
       }
     }
   }
-
   return validWords;
 }

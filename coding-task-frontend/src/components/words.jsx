@@ -1,84 +1,72 @@
-import React, { Component } from "react";
+import React from "react";
 import WordsTable from "./wordsTable";
-import Pagination from "./common/pagination";
-import { getWords, getFilteredWords } from "../services/fakeWordsService";
-import { paginate } from "../utils/paginate";
-import _ from "lodash";
-import SearchBox from "./searchBox";
+import Form from "./common/form";
+import Joi from "joi-browser";
+import { loadWords } from "../store/words";
 
-class Words extends Component {
+import { connect } from "react-redux";
+class Words extends Form {
   state = {
-    words: [],
-    currentPage: 1,
-    pageSize: 10,
-    searchQuery: "",
-    sortColumn: { path: "score", order: "desc" },
+    data: {
+      searchQuery: "",
+    },
+    errors: {},
+    sortColumn:{path: "score", order: "desc" }
+  };
+  
+  schema = {
+    searchQuery: Joi.string()
+      .required()
+      .min(2)
+      .label("Search"),
   };
 
-  componentDidMount() {
-    this.setState({ words: getWords() });
-  }
- 
-  handlePageChange = (page) => {
-    this.setState({ currentPage: page });
-  };
-
-  handleSearch = (query) => {
-    this.setState({ searchQuery: query, currentPage: 1 });
-  };
-
-  handleSort = (sortColumn) => {
-    this.setState({ sortColumn });
-  };
-
-  getPagedData = () => {
-    
-    const {
-      pageSize,
-      currentPage,
-      sortColumn,
-      searchQuery,
-      words: allWords,
-    } = this.state;
-
-    let filtered = allWords;
-    if (searchQuery) {
-      filtered = getFilteredWords(searchQuery)
-    }
-    
-    const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
-
-    const words = paginate(sorted, currentPage, pageSize);
-
-    return { totalCount: filtered.length, data: words };
+  doSubmit = async () => {
+    this.props.loadWords(this.state.data.searchQuery);
   };
 
   render() {
-    
-    const { pageSize, currentPage, sortColumn, searchQuery } = this.state;
-
-    const { totalCount, data: words } = this.getPagedData();
-
+     
+    const { sortColumn } = this.state;
     return (
       <div className="row">
         <div className="col">
-          <p>Search words in the database.</p>
-          <SearchBox value={searchQuery} onChange={this.handleSearch} />
-          <WordsTable
-            words={words}
-            sortColumn={sortColumn}
-            onSort={this.handleSort}
-          />
-          <Pagination
-            itemsCount={totalCount}
-            pageSize={pageSize}
-            currentPage={currentPage}
-            onPageChange={this.handlePageChange}
-          />
+          
+          <form onSubmit={this.handleSubmit} className="mb-5">
+            {this.renderInput("searchQuery", "Search letters")}
+            {this.renderButton("Search")}
+          </form>
+           
+          {this.props.loading ? (
+            <>Loading</> 
+          ) : (
+            <>
+              {this.props.words.length ? (
+                <>
+                  <WordsTable
+                      words={this.props.words}
+                      sortColumn={sortColumn}
+                    />
+                </>
+              ) : (
+                <>
+                </>
+              )}
+            </>
+          )}
         </div>
       </div>
     );
   }
 }
 
-export default Words;
+const mapStateToProps = state => ({
+  words: state.entities.words.list,
+  loading: state.entities.words.loading
+})
+const mapDispatchToProps = dispatch => ({
+  loadWords: (searchQuery) => dispatch(loadWords(searchQuery))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Words)
+ 

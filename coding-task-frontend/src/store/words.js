@@ -1,8 +1,5 @@
-import { createSelector, createSlice } from "@reduxjs/toolkit";
-import moment from "moment";
+import { createSlice } from "@reduxjs/toolkit";
 import { apiCallBegan } from "./api";
-
-let lastId = 0;
 
 //Action types/creators/reducer
 const slice = createSlice({
@@ -34,15 +31,10 @@ export const {
 } = slice.actions;
 export default slice.reducer;
 
-export const loadWords = () => (dispatch, getState) => {
-  const { lastFetch } = getState().entities.words;
-
-  const diffInMinutes = moment().diff(moment(lastFetch), "minutes");
-  if (lastFetch && diffInMinutes < 10) return;
-
+export const loadWords = (searchQuery) => (dispatch, getState) => {
   dispatch(
     apiCallBegan({
-      url: "http://localhost:3000/api/scrabble/",
+      url: `http://localhost:3000/api/scrabble/${searchQuery}`,
       onStart: wordsRequested.type,
       onSuccess: wordsReceived.type,
       onError: wordsRequestFailed.type,

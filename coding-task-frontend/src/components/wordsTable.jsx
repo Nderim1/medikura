@@ -3,16 +3,14 @@ import Table from "./table";
 
 class WordsTable extends Component {
   columns = [
-    {
-      path: "title",
-      label: "Words"
-    },
+    { path: "title", label: "Words" },
     { path: "score", label: "Score" },
-    { path: "description", label: "Description" },
+    { path: "desc", label: "Description" },
     
   ];
   render() {
     const { words, sortColumn, onSort } = this.props;
+   
     return (
       <Table
         columns={this.columns}
